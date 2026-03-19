@@ -123,6 +123,33 @@ def save_pdb(subunits, filepath):
         fs.write("END")
 
 
+def save_text(subunits, filepath):
+    """
+    Collapse per-atom B-factors into per-residue values (mean B-factor).
+    Output: chain, resname, resid, bfactor
+    """
+    # this assumes single subunit
+    out_all=[]
+    for cn in subunits:
+        chain = cn.split(':')[0][0]
+        N = subunits[cn]['xyz'].shape[0]
+        # group atoms by residue
+        residue_map = {}  # (resname, resid) to list of bfactors
+        for i in range(N):
+            resname = subunits[cn]['resname'][i]
+            resid   = subunits[cn]['resid'][i]
+            bfactor = subunits[cn].get('bfactor', [0.0]*N)[i]
+            key = (resname, resid)
+            residue_map.setdefault(key, []).append(bfactor)
+        # collapse and append
+        out_cn=[]
+        for (resname, resid), bfs in residue_map.items():
+            mean_b = sum(bfs) / len(bfs)
+            out_cn.append([chain + '\t' + resname + '\t' + str(resid) + '\t' + str(mean_b)])
+        out_all.extend(out_cn)
+    return out_all
+
+
 def save_traj_pdb(subunits, filepath):
     # determine number of frames
     for cn in subunits:
