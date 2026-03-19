@@ -1,5 +1,12 @@
 This is fork of the original PeSTo. I have cleaned the repository to make a minimal working version, and added a script (run_pesto.py) which can be used to run the model on one or multiple pdb files. I have added an extra functionaiity to output a PPIpred.txt (see it in examples_out/) which contains the PPI prediction in a tabular format.
 
+To install in a fresh conda environmnt. It will run with python 3.9 and older versions of e.g. numpy (<2):
+
+```
+conda env create -n pesto -f pesto.yml
+conda activate pesto
+```
+
 To see the possible parameters:
 `python run_pesto.py --help`
 
