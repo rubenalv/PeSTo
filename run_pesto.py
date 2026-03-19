@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--ipath', default=None, help=' input pdb file list path')
 parser.add_argument('--opath', default=None, help=' output pdb file list path')
 parser.add_argument('--iosame', default=False, action='store_true', help=' create output pdb in the same path as input pdb (overrides --opath)')
-parser.add_argument('--device', default='cpu', type=str, help=' device cpu or gpu (defaults to cpu)')
+parser.add_argument('--device', default='cpu', type=str, help=' device cpu or cuda (defaults to cpu)')
 parser.add_argument('--allpreds', default=False, action='store_true', help=' return all predictions (PPI, lipid, etc), as opposed to the default of returning PPI only (_iout0.pdb) (defaults to False)')
 parser.add_argument('--PPIasTEXT', default=False, action='store_true', help=dedent('''\
 output the aminoacid sequence and PPI prediction of all input as a single .txt file called PPIpred.txt.
@@ -154,8 +154,9 @@ with pt.no_grad():
             for i in range(z.shape[1]):
                 out = predict_and_save(i, z, structure, output_basepath, ppitextpath)
         if out is not None:
-            outext.append(out)
+            outext.extend(out)
+            outexto = [[filepath + '\t' + row[0]] for row in outext]
     if len(outext) > 0:
         with open(args.opath+'/PPIpred.txt', 'w') as f:
-            f.write('file chain AA pos PPI\n')
-            for line in outext: [f.write(s+'\n') for s in line]
+            f.write('file\tchain\tAA\tpos\tPPI\n')
+            for line in outexto: [f.write(s+'\n') for s in line]
