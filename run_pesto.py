@@ -24,7 +24,14 @@ parser.add_argument('--ipath', default=None, help=' input pdb file list path')
 parser.add_argument('--opath', default=None, help=' output pdb file list path')
 parser.add_argument('--iosame', default=False, action='store_true', help=' create output pdb in the same path as input pdb (overrides --opath)')
 parser.add_argument('--device', default='cpu', type=str, help=' device cpu or cuda (defaults to cpu)')
-parser.add_argument('--allpreds', default=False, action='store_true', help=' return all predictions (PPI, lipid, etc), as opposed to the default of returning PPI only (_iout0.pdb) (defaults to False)')
+parser.add_argument('--allpreds', default=False, action='store_true', help=dedent('''\
+        Return all predictions (PPI, lipid, etc), as opposed to the default of returning PPI only (_iout0.pdb) (defaults to False);
+        _iout0: protein-protein interaction;
+        _iout1: protein-DNA or RNA interaction;
+        _iout2: protein-ion interaction;
+        _iout3: protein-ligand interaction;
+        _iout4: protein-lipid interaction. 
+        If in doubt, compare results with output from https://pesto.epfl.ch/'''))
 parser.add_argument('--PPIasTEXT', default=False, action='store_true', help=dedent('''\
 output the aminoacid sequence and PPI prediction of all input as a single .txt file called PPIpred.txt.
 Configured only for --allpreds False.
